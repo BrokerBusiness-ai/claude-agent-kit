@@ -25,11 +25,16 @@ jobs:
         run: python evals/run_evals.py --min-f1 0.95
       - name: Hooki jako procesy (protokol stdin i kod wyjscia)
         run: |
+          set +e
           echo '{"tool_name":"Bash","tool_input":{"command":"git push --force"}}' \
-            | python .claude/hooks/guard_bash.py; test $? -eq 2
+            | python .claude/hooks/guard_bash.py
+          test $? -eq 2 || { echo "hook nie zablokowal force push"; exit 1; }
+          set -e
           echo '{"tool_name":"Bash","tool_input":{"command":"pytest -q"}}' \
             | python .claude/hooks/guard_bash.py
       - name: Walidator RCP na przykladzie (oczekiwany kod 1)
         run: |
+          set +e
           python .claude/skills/gdpr-doc-validator/scripts/validate_ropa.py \
-            .claude/skills/gdpr-doc-validator/examples/ropa_example.json; test $? -eq 1
+            .claude/skills/gdpr-doc-validator/examples/ropa_example.json
+          test $? -eq 1
