@@ -1,0 +1,35 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - run: pip install -e ".[dev]"
+      - name: Lint
+        run: ruff check . && ruff format --check .
+      - name: Testy
+        run: pytest -q
+      - name: Ewaluacje hookow (prog F1 0.95)
+        run: python evals/run_evals.py --min-f1 0.95
+      - name: Hooki jako procesy (protokol stdin i kod wyjscia)
+        run: |
+          echo '{"tool_name":"Bash","tool_input":{"command":"git push --force"}}' \
+            | python .claude/hooks/guard_bash.py; test $? -eq 2
+          echo '{"tool_name":"Bash","tool_input":{"command":"pytest -q"}}' \
+            | python .claude/hooks/guard_bash.py
+      - name: Walidator RCP na przykladzie (oczekiwany kod 1)
+        run: |
+          python .claude/skills/gdpr-doc-validator/scripts/validate_ropa.py \
+            .claude/skills/gdpr-doc-validator/examples/ropa_example.json; test $? -eq 1
