@@ -1,0 +1,42 @@
+{
+  "controller": {
+    "name": "Przykładowa Spółka sp. z o.o.",
+    "contact": "iod@example.com"
+  },
+  "activities": [
+    {
+      "name": "Rekrutacja pracowników",
+      "purpose": "przeprowadzenie procesu rekrutacji",
+      "data_subjects": ["kandydaci do pracy"],
+      "data_categories": ["dane identyfikacyjne", "dane kontaktowe", "przebieg kariery"],
+      "recipients": ["dostawca systemu ATS"],
+      "retention": "3 miesiące od zakończenia rekrutacji",
+      "security_measures": "kontrola dostępu, szyfrowanie dysków, rejestr upoważnień",
+      "legal_basis": ["6.1.b", "6.1.c"],
+      "processors": [{"name": "Dostawca ATS", "dpa_signed": true}]
+    },
+    {
+      "name": "Newsletter",
+      "purpose": "marketing własnych usług",
+      "data_subjects": ["subskrybenci"],
+      "data_categories": ["adres e-mail"],
+      "recipients": ["dostawca platformy mailingowej"],
+      "retention": "do odwołania",
+      "security_measures": "uwierzytelnianie dwuskładnikowe w panelu",
+      "legal_basis": ["6.1.a"],
+      "third_country_transfers": [{"country": "USA", "mechanism": null}],
+      "processors": [{"name": "Platforma mailingowa", "dpa_signed": false}]
+    },
+    {
+      "name": "Asystent AI do analizy zgłoszeń pacjentów",
+      "purpose": "wstępna kategoryzacja zgłoszeń",
+      "data_subjects": ["pacjenci"],
+      "data_categories": ["dane kontaktowe", "zdrowie"],
+      "recipients": ["personel medyczny"],
+      "retention": "5 lat",
+      "security_measures": "pseudonimizacja, logowanie dostępu",
+      "legal_basis": ["6.1.f"],
+      "dpia_criteria": ["innovative_technology", "vulnerable_subjects"]
+    }
+  ]
+}
